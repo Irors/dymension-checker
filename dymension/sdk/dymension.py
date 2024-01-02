@@ -16,10 +16,13 @@ async def get_response(response):
 async def request_(address: str, number: int, params):
 
     async with aiohttp.ClientSession() as session:
-
         try:
-            response = await session.get(f'https://geteligibleuserrequest-xqbg2swtrq-uc.a.run.app/?address={address}')
-            token_1 = await get_response(response)
+            if address[:2] == '0x':
+                response = await session.get(f'https://geteligibleuserrequest-xqbg2swtrq-uc.a.run.app/?address={address.lower()}')
+                token_1 = await get_response(response)
+            else:
+                response = await session.get(f'https://geteligibleuserrequest-xqbg2swtrq-uc.a.run.app/?address={address}')
+                token_1 = await get_response(response)
 
             await excel_write(address=address, quantity=token_1['amount'], number=number)
 
